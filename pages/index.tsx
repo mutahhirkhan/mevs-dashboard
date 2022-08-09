@@ -1,7 +1,9 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import Header from '../component/Header/Header'
 import styles from '../styles/Home.module.css'
+import Input from '../component/Input/Input';
 
 const Home: NextPage = () => {
   return (
@@ -13,6 +15,8 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
+        <Header />
+        <Input/>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>

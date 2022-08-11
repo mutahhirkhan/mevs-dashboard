@@ -1,11 +1,18 @@
-import { Switch } from 'antd'
-import React from 'react'
+import { Switch } from "antd";
+import React from "react";
 
-const Toggle = ({onChange}: any) => {
-  return (
-    <Switch onChange={onChange} defaultChecked checkedChildren="Ethereum" unCheckedChildren="Polygon" />
-
-  )
+interface Props {
+	chainId: number;
 }
 
-export default Toggle
+const Toggle = ({ chainId }: Props) => {
+	return (
+		<Switch
+			defaultChecked
+			checkedChildren={`${chainId == 1 ? "Ethereum" : "Polygon"}`}
+			unCheckedChildren={`${chainId == 137 ? "Polygon" : "Ethereum"}`}
+		/>
+	);
+};
+
+export default Toggle;

@@ -14,6 +14,8 @@
     "@web3-react/metamask": "^8.0.0-beta.0",
     "@web3-react/types": "^6.0.7",
     "antd": "^4.22.4",
+    "axios": "^0.27.2",
+    "ethereumjs-tx": "^2.1.2",
     "next": "12.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",

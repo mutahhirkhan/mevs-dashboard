@@ -20,11 +20,17 @@ interface INotificationService {
 	config(params: IConfigParams): Promise<any>;
 }
 
-const config = async (contractAddress = "", isMainnet = false, amount = 0) => {
+const {ETHERSCAN_API_TOKEN} = process.env;
+
+const config = async (contractAddress = "", isMainnet = false, amount = 0, walletAddress = "") => {
 	try {
+		
 		const contract = contractAddress ? contractAddress : "0x512fE96aa3cC9265b94Dc3017BF0d805AF0800F2";
-		let putRinkeby = isMainnet ? "" : "-goerli";
-		const { data } = await axios.get(`https://api${putRinkeby}.etherscan.io/api?module=contract&action=getabi&address=${contract}&apikey=${process.env.ETHERSCAN_API_TOKEN}`);
+		let putGoerli = isMainnet ? "" : "-goerli";
+		
+		let etherScanContractApi = `https://api${putGoerli}.etherscan.io/api?module=contract&action=getabi&address=${contract}&apikey=${ETHERSCAN_API_TOKEN}`
+		
+		const { data } = await axios.get(etherScanContractApi);
 		//console.log("abi res",data)
         if (data.message === "NOTOK") {
             return {
@@ -49,11 +55,11 @@ const config = async (contractAddress = "", isMainnet = false, amount = 0) => {
 			contractInstance: isMainnet
 				? new web3Mainnet.eth.Contract(abiResult, contract)
 				: new web3Testnet.eth.Contract(abiResult, contract),
-			etherscanAPiToken: process.env.ETHERSCAN_API_TOKEN,
+			// etherscanAPiToken: ETHERSCAN_API_TOKEN,
 			transactionObject: {
 				from: "",
 				gas: 10000000000, // Something price like this
-				gasPrice: ethGasStationResponse.fastest / 10, // Gas limit
+				gasPrice: (ethGasStationResponse.fastest / 10) * 1e9, // Gas limit in wei now
 				to: contract,
 				value: 0,
 				nonce: 0,

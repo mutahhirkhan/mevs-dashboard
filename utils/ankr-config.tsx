@@ -29,18 +29,18 @@ const endpoint = `${ANKR_RPC_ENDPOINT}`;
 const ankrGetTokenBalances = async (address: string = "") => {
 	try {
 		reqBody.params.walletAddress = address;
-        // console.log('calling to',reqBody);
+		// console.log('calling to',reqBody);
 		let response = await axios.post(endpoint, JSON.stringify(reqBody));
-		console.log("response.data",response.data);
-		return {data: response?.data?.result || {}};
+		console.log("response.data", response.data);
+		return { data: response?.data?.result || {} };
 	} catch (error) {
-        console.log("errorrrrrrrrr")
+		console.log("errorrrrrrrrr");
 		let message = "unknown error";
 		if (error instanceof Error) message = error.message;
 		console.log(message);
-        return {
-            error: message,
-        }
+		return {
+			error: message,
+		};
 	}
 };
 
@@ -48,4 +48,4 @@ module.exports = {
 	ankrGetTokenBalances,
 };
 
-export {}
+export {};

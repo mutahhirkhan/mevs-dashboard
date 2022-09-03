@@ -2,7 +2,7 @@ const Web3 = require("web3");
 const axios = require("axios");
 // Setup: npm install alchemy-sdk
 import { Alchemy, Network, TokenBalancesResponse } from "alchemy-sdk";
-const {NEXT_PUBLIC_ALCHEMY_ACCESS_TOKEN} = process.env;
+const { NEXT_PUBLIC_ALCHEMY_ACCESS_TOKEN } = process.env;
 // const url: string = "https://eth-mainnet.g.alchemy.com/v2/9ypu7nYud-JjBWy9TdWMDJGX4ONqmYFW"; // url string
 const url: string = `https://eth-mainnet.alchemyapi.io/v2/${NEXT_PUBLIC_ALCHEMY_ACCESS_TOKEN}`; // url string
 
@@ -18,7 +18,7 @@ const alchemy = new Alchemy(config);
 //get top 100 token balance by volume
 const getTokenBalances = async (address: string = "") => {
 	try {
-		console.log('USER ADDRESS',address)
+		console.log("USER ADDRESS", address);
 		// Get token balances
 		let balances: TokenBalancesResponse = await alchemy.core.getTokenBalances(address);
 
@@ -27,7 +27,7 @@ const getTokenBalances = async (address: string = "") => {
 
 		let metadata: any[] = [];
 		let tokenBalanceResponse: object[] = [];
-		
+
 		// Loop through all tokens with non-zero balance
 		nonZeroBalances.forEach((tok) => {
 			let balance: any = tok.tokenBalance;

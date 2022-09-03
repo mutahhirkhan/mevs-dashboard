@@ -27,7 +27,7 @@ const getLibrary = (provider: provider) => {
 const Home: NextPage<Props> = ({ name }) => {
 	// console.log("name", name);
 	const { activate, account, active, deactivate, chainId, library } = useWeb3React();
-  const [userTokenBalances, setUserTokenBalances] = useState([]);
+	const [userTokenBalances, setUserTokenBalances] = useState([]);
 
 	useEffect(() => {
 		(async () => {
@@ -37,26 +37,20 @@ const Home: NextPage<Props> = ({ name }) => {
 		})();
 	}, []);
 
-
 	useEffect(() => {
 		// console.log(active, account, chainId);
-		
-    (async () => {
-      try {
-        
-        const {tokenHoldings, ...rest} = await fetchResponse("hello", "0xAfA13aa8F1b1d89454369c28b0CE1811961A7907");
-        console.log("unipilot holdings:", tokenHoldings);
-        setUserTokenBalances(tokenHoldings.assets)
-        const {data, error} = await fetchResponse("pending");
 
-      } catch (error) {
-        console.log(error)
-      }
-	})();
-
+		(async () => {
+			try {
+				const { tokenHoldings, ...rest } = await fetchResponse("hello", "0xAfA13aa8F1b1d89454369c28b0CE1811961A7907");
+				console.log("unipilot holdings:", tokenHoldings);
+				setUserTokenBalances(tokenHoldings.assets);
+				const { data, error } = await fetchResponse("pending");
+			} catch (error) {
+				console.log(error);
+			}
+		})();
 	}, [account, chainId]);
-
-  
 
 	const metamaskConnector = new InjectedConnector({
 		supportedChainIds: [1, 5, 137],

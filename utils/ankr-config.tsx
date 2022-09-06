@@ -32,14 +32,21 @@ const ankrGetTokenBalances = async (address: string = "") => {
 		// console.log('calling to',reqBody);
 		let response = await axios.post(endpoint, JSON.stringify(reqBody));
 		console.log("response.data", response.data);
+		
+		// if RPC returned error then send it back
+		if(response.data.error) {
+			throw new Error(response.data.error.message)
+		} 
+		
+		//if all went good
 		return { data: response?.data?.result || {} };
 	} catch (error) {
 		console.log("errorrrrrrrrr");
-		let message = "unknown error";
-		if (error instanceof Error) message = error.message;
-		console.log(message);
+		// let message = "unknown error";
+		// if (error instanceof Error) message = error.message;
+		// console.log(message);
 		return {
-			error: message,
+			error,
 		};
 	}
 };

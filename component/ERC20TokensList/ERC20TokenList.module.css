@@ -1,0 +1,7 @@
+.listWrapper {
+    height: 400px;
+    /* oveflow-y: scroll; */
+    border-radius: 4px;
+    overflow-y: scroll; 
+
+}

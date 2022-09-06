@@ -1,5 +1,6 @@
 export const fetchResponse = async (url: string, address?: string): Promise<any> => {
 	try {
+		// console.log('user address',address);
 		const response = await fetch(
 			process.env.NEXT_PUBLIC_BASE_URL + url + `${address ? "?user=" + address : ""}`
 			// ,{

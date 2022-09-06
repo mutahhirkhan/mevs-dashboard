@@ -8,7 +8,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider(url));
 interface Props {
 	data?: any;
 }
-export const getPendingTransactions = async () => {
+const getPendingTransactions = async () => {
 	try {
 		const data = await web3.eth.getPendingTransactions();
 		console.log("get mempool");
@@ -17,3 +17,7 @@ export const getPendingTransactions = async () => {
 		console.log(error);
 	}
 };
+module.exports = {
+	web3,
+	getPendingTransactions
+}

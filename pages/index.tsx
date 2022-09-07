@@ -17,6 +17,7 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { getPendingTransactions, web3 } from "../utils/web3Services";
 import { showErrorMessage, showInfoMessage } from "./../component/Notification/Notification"
 import ERC20TokensList from "./../component/ERC20TokensList/ERC20TokensList"
+import PendingTxList from "./../component/PendingTxList/PendingTxList"
 
 interface Props {
 	name: string;
@@ -33,6 +34,7 @@ const Home: NextPage<Props> = ({ name }) => {
 	// console.log("name", name);
 	const { activate, account, active, deactivate, chainId, library } = useWeb3React();
 	const [userTokenBalances, setUserTokenBalances] = useState([]);
+	const [pendigTransactions, setPendigTransactions] = useState([]);
 
 	useEffect(() => {
 		(async () => {
@@ -51,13 +53,15 @@ const Home: NextPage<Props> = ({ name }) => {
 				// console.log("unipilot holdings:", tokenHoldings);
 				// setUserTokenBalances(tokenHoldings.assets);
 				const { data, error } = await fetchResponse("pending");
-				
+				console.log(data, error)
 				if(error) throw new Error(error);
+				setPendigTransactions(data)
 			} catch (error) {
+				showErrorMessage(error)
 				console.log(error);
 			}
 		})();
-	}, [account, chainId]);
+	}, []);
 
 	const metamaskConnector = new InjectedConnector({
 		supportedChainIds: [1, 5, 137],
@@ -121,7 +125,8 @@ const Home: NextPage<Props> = ({ name }) => {
 				<Avatar />
 				<Toggle chainId={chainId ? chainId : 1} />
 				<Header> {account} </Header>
-				<ERC20TokensList tokenList={userTokenBalances}/>
+				<ERC20TokensList tokenList = {userTokenBalances}/>
+				<PendingTxList pendingList = {pendigTransactions} />
 			</main>
 		</div>
 	);

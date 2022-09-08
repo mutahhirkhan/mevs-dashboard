@@ -3,11 +3,11 @@ import {Transaction} from "./../../utils/block-cypher.config"
 import {TruncateAddress} from "./../../helper"
 
 const PendingTxListItem: React.FC = ({transaction}:Transaction) => {
-    const {hash, addresses,total,outputs thumbnail, tokenDecimals, tokenSymbol, tokenType, balance, contractAddress} = transaction
+    const {hash, addresses,total,outputs, thumbnail, tokenDecimals, tokenSymbol, tokenType, balance, contractAddress} = transaction
     let functionSignature = outputs[0].scripts;
     
     return (
-        <div classNam={styles.tokenItem}>
+        <div className={styles.tokenItem}>
             <span className="flex">From: {addresses?.[0]}</span>
             {/* <span  className="flex">
                 <img height="30px" src={thumbnail}/>

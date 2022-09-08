@@ -53,7 +53,7 @@ const Home: NextPage<Props> = ({ name }) => {
 				// console.log("unipilot holdings:", tokenHoldings);
 				// setUserTokenBalances(tokenHoldings.assets);
 				const { data, error } = await fetchResponse("pending");
-				console.log(data, error)
+				// console.log(data, error)
 				if(error) throw new Error(error);
 				setPendigTransactions(data)
 			} catch (error) {
@@ -120,7 +120,7 @@ const Home: NextPage<Props> = ({ name }) => {
 			<NextHead />
 
 			<main className={styles.main}>
-				<Header> hello dashboard </Header>
+				{/* <Header> hello dashboard </Header> */}
 				<Input onSearch={getUser} />
 				<Avatar />
 				<Toggle chainId={chainId ? chainId : 1} />

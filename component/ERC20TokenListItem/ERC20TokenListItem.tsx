@@ -28,7 +28,7 @@ const ERC20TokenListItem = ({token}:TokenType) => {
             <span className="flex"> type: {tokenType} </span>
             <span className="flex">{balance} {tokenSymbol}</span>
             {/* <span>{tokenSymbol}</span> */}
-            {contractAddress && <a className="flex" href={`https://etherscan.io/address/${contractAddress}`}> view contract</a>}
+            {contractAddress && <a className="flex" href={`https://etherscan.io/address/${contractAddress}`} target="_blank"> view contract</a>}
             
             
         </div>

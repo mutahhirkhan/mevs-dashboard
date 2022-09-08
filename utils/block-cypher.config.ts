@@ -32,15 +32,15 @@ type ApiResponse = () => Promise<FunctionResponse>;
 export const getPendingTransactions: any = async () => {
 	try {
         
-		const data = await fetch("https://api.blockcypher.com/v1/eth/main/txs?limit=100");
+		const response = await fetch("https://api.blockcypher.com/v1/eth/main/txs?limit=100");
 		// console.log('===========',response?.length)
-        // let data = await response.json()
-        // console.log('====================================');
-        // console.log(res);
-        // console.log('====================================');
+        let data = await response.json()
+		// console.log('====================================');
+		// console.log(await data.json());
+		// console.log('====================================');
         return {data};
 	} catch (error) {
-		console.log(error);
+		console.log(error);	
 		return {
 			error,
 		};

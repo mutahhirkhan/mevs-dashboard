@@ -1,5 +1,5 @@
 import ERC20TokenListItem from "./../ERC20TokenListItem/ERC20TokenListItem"
-import styles from "./ERC20TokenList.module.css"
+    import styles from "./ERC20TokenList.module.css"
 import styless from "./../ERC20TokenListItem/ERC20TokenListItem.module.css"
 
 interface Props {

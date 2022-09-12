@@ -1,30 +1,53 @@
 import styles from "./PendingTxListItem.module.css"
+import { CopyOutlined } from '@ant-design/icons';
 import {Transaction} from "./../../utils/block-cypher.config"
 import {TruncateAddress} from "./../../helper"
+import {getFunctionNameBySignature} from "./../../utils/generalServices.config"
+import { showSuccessMessage } from "./../Notification/Notification"
 
-const PendingTxListItem: React.FC = ({transaction}:Transaction) => {
-    const {hash, addresses,total,outputs, thumbnail, tokenDecimals, tokenSymbol, tokenType, balance, contractAddress} = transaction
-    let functionSignature = outputs[0].scripts;
-    
+interface Props {
+    transaction: Transaction[];
+    functionName:any;
+}
+
+const PendingTxListItem: NextComponentType<Props> = ({transaction, functionName}) => {
+    // console.log(transaction);
+    const {hash, addresses,total,outputs, confirmations, gas_price, thumbnail, tokenDecimals, tokenSymbol, tokenType, balance, contractAddress} = transaction
+    let functionSignature;
+    // if(!functionName) {
+    //     console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    //     console.log(transaction, functionName)
+    // }
+    // else {
+    //     console.log("=======================================")
+    // }
+    if(functionName) {
+        functionSignature = Object.keys(functionName)[0];
+        // console.log('functionSignature',functionSignature)
+    }
     return (
         <div className={styles.tokenItem}>
-            <span className="flex">From: {addresses?.[0]}</span>
-            {/* <span  className="flex">
-                <img height="30px" src={thumbnail}/>
-            </span> */}
-            <span className="flex"> To: {addresses?.[0]} </span>
-            <span className="flex"> Eth Amount: {total} </span>
-            <span className="flex"> Function: {outputs[0]} </span>
-            <span className="flex">{balance} {tokenSymbol}</span>
-            {/* <span>{tokenSymbol}</span> */}
-            {hash && <a className="flex" href={`https://etherscan.io/tx/${hash}`} target="_blank"> view Transaction </a>}
-
+            <span className="flex">From: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[0]}`}> {TruncateAddress(addresses?.[0])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(addresses?.[0]); showSuccessMessage('From Address Copied to clipboard')}} />  </span>
+            <span className="flex"> To: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[1]}`}> {TruncateAddress(addresses?.[1])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(addresses?.[0]); showSuccessMessage('To Address Copied to clipboard')}}/>  </span>
+            <span className="flex"> Eth Amount: {total/1e18}{/** convert wei to eth */} </span>
+            <span className={`flex ${styles.sig}`}> Function: {functionSignature === "0xundefined" ? "N/A " : functionName[functionSignature]?.[0]?.name} </span>
+            {/* <span className="flex"> Confirmations: {confirmations}</span> */}
+            <span className="flex"> Gas Price: {gas_price/1e9}{/**convert wei to Gwei */}</span>
+            {hash && <a className="flex" href={`https://etherscan.io/tx/0x${hash}`} target="_blank"> view Transaction </a>}
         </div>
     )
 }
 
 export default PendingTxListItem;
 /**
+ * {
+ *      0xSomeSignature:[
+ *          {
+ *              filtered: bool,
+ *              name: 'functionName(typeA,typeB)'
+ *          }
+ *      ]
+ * }
  * 
 [
     "block_height": -1,
@@ -38,7 +61,7 @@ export default PendingTxListItem;
     "fees": 5596183524800000,
     "size": 223,
     "gas_limit": 200000,
-    "gas_price": 27980917624,
+    "gas_price": 27980917624,   
     "gas_tip_cap": 2458456307,
     "gas_fee_cap": 27980917624,
     "received": "2022-09-07T13:34:54.512927225Z",

@@ -7,12 +7,17 @@ interface Props {
 
 const Toggle = ({ chainId }: Props) => {
 	return (
+			chainId === 1 ?
 		<Switch
 			defaultChecked
-			checkedChildren={`${chainId == 1 ? "Ethereum" : "Polygon"}`}
-			unCheckedChildren={`${chainId == 137 ? "Polygon" : "Ethereum"}`}
-		/>
+			checkedChildren={ "Ethereum"}
+			unCheckedChildren={"Polygon"}
+		/> : chainId === 137 ?
+		<Switch
+			defaultChecked
+			checkedChildren={"Polygon"}
+			unCheckedChildren={"Ethereum"}
+		/> : <></>
 	);
 };
-
 export default Toggle;

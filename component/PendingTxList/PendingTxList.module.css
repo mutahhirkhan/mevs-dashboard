@@ -3,5 +3,7 @@
     /* oveflow-y: scroll; */
     border-radius: 4px;
     overflow-y: scroll; 
+    display: grid;
+    grid-row-gap: 15px;
 
 }

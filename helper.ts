@@ -1,8 +1,7 @@
 export const TruncateAddress = (address: string) => {
     if (address) {
         if (address.length > 5) {
-            return `${address.substring(0, 5)}...${address[address.length - 3]}
-                ${address[address.length - 2]}${address[address.length - 1]}
+            return `${address.substring(0, 5)}...${address[address.length - 3]}${address[address.length - 2]}${address[address.length - 1]}
                 `
         }
         else return address

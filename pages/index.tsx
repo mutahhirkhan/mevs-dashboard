@@ -18,9 +18,11 @@ import { getPendingTransactions, web3 } from "../utils/web3Services";
 import { showErrorMessage, showInfoMessage } from "./../component/Notification/Notification"
 import ERC20TokensList from "./../component/ERC20TokensList/ERC20TokensList"
 import PendingTxList from "./../component/PendingTxList/PendingTxList"
+import {Transaction} from "./../utils/block-cypher.config"
 
 interface Props {
-	name: string;
+	name?: string;
+	transactions?: Transaction[]
 }
 interface Event {
 	e: React.ChangeEvent<HTMLInputElement>
@@ -30,11 +32,12 @@ const getLibrary = (provider: provider) => {
 	return new Web3(provider);
 };
 
-const Home: NextPage<Props> = ({ name }) => {
+const Home: NextPage<Props> = ({ name, transactions }) => {
 	// console.log("name", name);
+	// console.log(" transactions",  transactions);
 	const { activate, account, active, deactivate, chainId, library } = useWeb3React();
 	const [userTokenBalances, setUserTokenBalances] = useState([]);
-	const [pendigTransactions, setPendigTransactions] = useState([]);
+	// const [pendigTransactions, setPendigTransactions] = useState([]);
 
 	useEffect(() => {
 		(async () => {
@@ -52,10 +55,10 @@ const Home: NextPage<Props> = ({ name }) => {
 				// const { tokenHoldings, ...rest } = await fetchResponse("tokens", "0xAfA13aa8F1b1d89454369c28b0CE1811961A7907");
 				// console.log("unipilot holdings:", tokenHoldings);
 				// setUserTokenBalances(tokenHoldings.assets);
-				const { data, error } = await fetchResponse("pending");
+				// const { data, error } = await fetchResponse("pending");
 				// console.log(data, error)
-				if(error) throw new Error(error);
-				setPendigTransactions(data)
+				// if(error) throw new Error(error);
+				// setPendigTransactions(data)
 			} catch (error) {
 				showErrorMessage(error)
 				console.log(error);
@@ -126,27 +129,29 @@ const Home: NextPage<Props> = ({ name }) => {
 				<Toggle chainId={chainId ? chainId : 1} />
 				<Header> {account} </Header>
 				<ERC20TokensList tokenList = {userTokenBalances}/>
-				<PendingTxList pendingList = {pendigTransactions} />
+				<PendingTxList pendingList = {transactions} />
 			</main>
 		</div>
 	);
 };
 
-const HomeWrapper: NextPage<Props> = ({ name }) => {
+const HomeWrapper: NextPage<Props> = ({ name, transactions }) => {
 	return (
 		<Web3ReactProvider getLibrary={getLibrary}>
-			<Home name={name} />
+			<Home name={name} transactions={transactions}/>
 		</Web3ReactProvider>
 	);
 };
 
-// HomeWrapper.getInitialProps = async () => {
-// 	try {
-// 		const response = await fetchResponse("tokens");
-// 		return response;
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// };
+HomeWrapper.getInitialProps = async () => {
+	try {
+		const {data, error} = await fetchResponse("pending");
+		// console.log(data, error)
+		if(error) throw new Error(error);
+		return {transactions: data};
+	} catch (error) {
+		console.log(error);
+	}
+};
 
 export default HomeWrapper;

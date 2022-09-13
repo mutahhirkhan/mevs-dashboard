@@ -75,6 +75,8 @@ const Home: NextPage<Props> = ({ name, transactions }) => {
 		try {
 			let queryAddress = `${value}`
 			queryAddress = web3.utils.toChecksumAddress(queryAddress)
+			
+			console.log('user',queryAddress);
 			const { tokenHoldings, ...rest } = await fetchResponse("tokens", queryAddress);
 			// console.log('parent component',tokenHoldings);
 			// console.log('rest',rest)

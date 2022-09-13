@@ -1,9 +1,12 @@
+import  axios from "axios";
+import Web3 from 'web3'
 import styles from "./PendingTxListItem.module.css"
 import { CopyOutlined } from '@ant-design/icons';
 import {Transaction} from "./../../utils/block-cypher.config"
 import {TruncateAddress} from "./../../helper"
 import {getFunctionNameBySignature} from "./../../utils/generalServices.config"
-import { showSuccessMessage } from "./../Notification/Notification"
+import { showSuccessMessage, showErrorMessage } from "./../Notification/Notification"
+import { useWeb3React } from "@web3-react/core";
 
 interface Props {
     transaction: Transaction[];
@@ -11,29 +14,70 @@ interface Props {
 }
 
 const PendingTxListItem: NextComponentType<Props> = ({transaction, functionName}) => {
-    // console.log(transaction);
-    const {hash, addresses,total,outputs, confirmations, gas_price, thumbnail, tokenDecimals, tokenSymbol, tokenType, balance, contractAddress} = transaction
+    const web3Context = useWeb3React();
+
+    const {hash, addresses,total, gas_price} = transaction
     let functionSignature;
-    // if(!functionName) {
-    //     console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-    //     console.log(transaction, functionName)
-    // }
-    // else {
-    //     console.log("=======================================")
-    // }
-    if(functionName) {
+    if(functionName) 
         functionSignature = Object.keys(functionName)[0];
-        // console.log('functionSignature',functionSignature)
+    
+    const frontRun = async (contractAddress: string) => {
+        try {
+            const web3 = new Web3(web3Context?.library?.currentProvider);
+            let etherScanContractApi = `https://api.etherscan.io/api?module=contract&action=getabi&address=0x${contractAddress}&apikey=${process.env.NEXT_PUBLIC_ETHERSCAN_API_TOKEN}`
+            
+            const { data } = await axios.get(etherScanContractApi);
+            //console.log("abi res",data)
+            if (data.message === "NOTOK") {
+                return {
+                    error: data.result,
+                };
+            }
+            const contractAbi: any = JSON.parse(data.result);
+
+            const contract = new web3.eth.Contract(
+                contractAbi as any,
+                contractAddress
+            );
+
+            // contract.methods
+            //     .mint(
+            //         status,
+            //         Web3.utils.toWei(price),
+            //         Math.floor(date.getTime() / 1000).toString(),
+            //         URI.cid.toString(),
+            //         JSON.stringify(URI_Obj)
+            //     )
+            //     .send({
+            //         from: web3Context.account,
+            //     })
+            //     .on("transactionHash", (hash) => {
+            //         // console.log("hash 0", hash);
+            //     })
+            //     .on("error", () => {
+            //         // console.log("hash 0", hash);
+            //         // setLoading(false);
+            //     })
+            //     .on("confirmation", function (confirmationNumber) {
+            //         if (confirmationNumber === 0) {
+            //         navigate("/home");
+            //         }
+            //     });
+            // }
+        }catch(error) {
+            showErrorMessage(error.message)
+        }    
     }
-    return (
+        return (
         <div className={styles.tokenItem}>
-            <span className="flex">From: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[0]}`}> {TruncateAddress(addresses?.[0])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(addresses?.[0]); showSuccessMessage('From Address Copied to clipboard')}} />  </span>
-            <span className="flex"> To: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[1]}`}> {TruncateAddress(addresses?.[1])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(addresses?.[0]); showSuccessMessage('To Address Copied to clipboard')}}/>  </span>
-            <span className="flex"> Eth Amount: {total/1e18}{/** convert wei to eth */} </span>
+            <span className="flex">From: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[1]}`}> {TruncateAddress(addresses?.[1])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(`0x${addresses?.[1]}`); showSuccessMessage('From Address Copied to clipboard')}} />  </span>
+            <span className="flex"> To: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[0]}`}> {TruncateAddress(addresses?.[0])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(`0x${addresses?.[0]}`); showSuccessMessage('To Address Copied to clipboard')}}/>  </span>
+            <span className="flex"> Eth: {total/1e18}{/** convert wei to eth */} </span>
             <span className={`flex ${styles.sig}`}> Function: {functionSignature === "0xundefined" ? "N/A " : functionName[functionSignature]?.[0]?.name} </span>
-            {/* <span className="flex"> Confirmations: {confirmations}</span> */}
-            <span className="flex"> Gas Price: {gas_price/1e9}{/**convert wei to Gwei */}</span>
+            <span className="flex"> Gas Price: {gas_price/1e9} Gwei{/**convert wei to Gwei */}</span>
             {hash && <a className="flex" href={`https://etherscan.io/tx/0x${hash}`} target="_blank"> view Transaction </a>}
+            <button className="flex" onClick={() => frontRun(addresses?.[0])}> Front Run </button>
+            {/* <span className="flex" onClick={frontRun(addresses?.[0])}>  </span> */}
         </div>
     )
 }

@@ -3,6 +3,7 @@ const axios = require("axios");
 // Setup: npm install alchemy-sdk
 import { Alchemy, Network, TokenBalancesResponse } from "alchemy-sdk";
 const { NEXT_PUBLIC_ALCHEMY_ACCESS_TOKEN } = process.env;
+
 // const url: string = "https://eth-mainnet.g.alchemy.com/v2/9ypu7nYud-JjBWy9TdWMDJGX4ONqmYFW"; // url string
 const url: string = `https://eth-mainnet.alchemyapi.io/v2/${NEXT_PUBLIC_ALCHEMY_ACCESS_TOKEN}`; // url string
 
@@ -10,7 +11,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider(url));
 
 // get all token balances of an address
 const config = {
-	apiKey: "9ypu7nYud-JjBWy9TdWMDJGX4ONqmYFW",
+	apiKey: NEXT_PUBLIC_ALCHEMY_ACCESS_TOKEN,
 	network: Network.ETH_MAINNET,
 };
 const alchemy = new Alchemy(config);
@@ -56,8 +57,40 @@ const getTokenBalances = async (address: string = "") => {
 	}
 };
 
+const alchemyGetPendingTransaction = () => {
+	//wss://eth-mainnet.g.alchemy.com/v2/9ypu7nYud-JjBWy9TdWMDJGX4ONqmYFW
+
+	// // Get the latest block
+	// const latestBlock = alchemy.core.getBlockNumber();
+		
+	// // Get all outbound transfers for a provided address
+	// alchemy.core
+	// 	.getTokenBalances('0x994b342dd87fc825f66e51ffa3ef71ad818b6893')
+	// 	.then(console.log);
+
+	// // Get all the NFTs owned by an address
+	// const nfts = alchemy.nft.getNftsForOwner("0xshah.eth");
+	console.log('alchemy quering for')
+	//clear all previous listners, then initialized a new wss
+	// alchemy.ws.removeAllListeners();
+
+	// let txArray = ['1']
+
+	// Listen to all new pending transactions
+	//0x619c45eadff276a6520e16e4a0d7337b181e9979
+	// alchemy.ws.on(
+	// 	{ method: "alchemy_pendingTransactions",
+	// 	fromAddress: "0x619c45eadff276a6520e16e4a0d7337b181e9979", toAddress: "0x619c45eadff276a6520e16e4a0d7337b181e9979"},
+	// 	(res) => console.log(res)
+	// );
+	// console.log(txArray)
+	return alchemy;
+
+}
+
 // runMain();
 
 module.exports = {
 	getTokenBalances,
+	alchemyGetPendingTransaction,
 };

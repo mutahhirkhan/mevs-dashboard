@@ -7,3 +7,9 @@
     grid-row-gap: 15px;
 
 }
+.boxShadowClass {
+    box-shadow: 0px 0px 13px 0px #d1d1d1;
+    padding: 6px;
+    margin: 6px;
+    border-radius: 6px;
+}

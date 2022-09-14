@@ -3,14 +3,16 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 // import { getPendingTransactions } from '../../utils/web3Services';
 import { getPendingTransactions } from "./../../utils/block-cypher.config";
 const { ankrGetPendingTransactions } = require("./../../utils/ankr.config") 
+const { alchemyGetPendingTransaction } = require("./../../utils/alchemy.config") 
 
 
 export default async function pending (req: NextApiRequest, res: NextApiResponse) {
   try {
-    const {wss} = req.query;
-    console.log('wss',wss)
+    const {user, wss} = req.query;
     // console.log(JSON.stringify(req.headers));
+    console.log(wss, user)
     if(!wss) {
+      console.log('block cypher pending')
       const {data, error} = await getPendingTransactions();
       // console.log('api resposne',response?.[0], response?.[1], error)
       if(error) throw new Error(error.message)
@@ -18,7 +20,9 @@ export default async function pending (req: NextApiRequest, res: NextApiResponse
       res.status(200).json({data})
     }
     else {
-      ankrGetPendingTransactions()
+      console.log("alchemy wss query")
+      alchemyGetPendingTransaction(user)
+      // ankrGetPendingTransactions()
       // res.status(200).json({data})
     }
     

@@ -8,7 +8,7 @@ interface Props {
 
 const ERC20TokensList: React.FC = ({tokenList}:Props) => {
 return (
-    <div className={styles.listWrapper}>
+    <div className={styles.listWrapper+" "+styles.boxShadowClass}>
         <div className={styless.tokenItem}>
             <strong className="flex"> NAME </strong>
             <strong className="flex"> IMAGE </strong>
@@ -21,7 +21,7 @@ return (
             
             
         </div>
-        {tokenList.map(token => <ERC20TokenListItem key={token.contractAddress} token={token}/>)}
+        {tokenList.map((token, index) => <ERC20TokenListItem key={index+1} token={token}/>)}
     </div> 
     )   
 }

@@ -37,6 +37,7 @@ const Home: NextPage<Props> = ({ name, transactions }) => {
 	// console.log(" transactions",  transactions);
 	const { activate, account, active, deactivate, chainId, library } = useWeb3React();
 	const [userTokenBalances, setUserTokenBalances] = useState([]);
+	const [userAddress, setUserAddress] = useState("");
 	// const [pendigTransactions, setPendigTransactions] = useState([]);
 
 	useEffect(() => {
@@ -76,27 +77,34 @@ const Home: NextPage<Props> = ({ name, transactions }) => {
 			let queryAddress = `${value}`
 			queryAddress = web3.utils.toChecksumAddress(queryAddress)
 			
-			console.log('user',queryAddress);
-			const { tokenHoldings, ...rest } = await fetchResponse("tokens", queryAddress);
-			// console.log('parent component',tokenHoldings);
-			// console.log('rest',rest)
-			
-			//if error found, then stop the following executions
-			if(rest.error) {
-				showErrorMessage(rest.error.message || "An Error occured, please try again")
+			// console.log('user',queryAddress);
+			setUserAddress(queryAddress)
+			//save api equest if current address and last address are same
+			if(userAddress !== queryAddress) {
+				const { tokenHoldings, ...rest } = await fetchResponse("tokens", queryAddress);
+				// console.log('parent component',tokenHoldings);
+				// console.log('rest',rest)
+				
+				//if error found, then stop the following executions
+				if(rest.error) {
+					showErrorMessage(rest.error.message || "An Error occured, please try again")
+				}
+				//if user has any token holdings, either Eth or ay ERC20
+				//extra check, if api responded with empty assets array.
+				else if(tokenHoldings.assets) {
+					// if user has more than 0 token holdings, including Eth
+					if(tokenHoldings.assets.length === 0) {
+						showInfoMessage("This address has no ERC20 holdings neither Eth")
+						//if previous state length has any assets then empty, 
+						//reduces the state change from empty array to empty array setState.
+						userTokenBalances.length && setUserTokenBalances([])
+					}  
+					//if user has no holding.
+					else if(tokenHoldings.assets.length > 0) setUserTokenBalances(tokenHoldings.assets)
+				}
 			}
-			//if user has any token holdings, either Eth or ay ERC20
-			//extra check, if api responded with empty assets array.
-			else if(tokenHoldings.assets) {
-				// if user has more than 0 token holdings, including Eth
-				if(tokenHoldings.assets.length === 0) {
-					showInfoMessage("This address has no ERC20 holdings neither Eth")
-					//if previous state length has any assets then empty, 
-					//reduces the state change from empty array to empty array setState.
-					userTokenBalances.length && setUserTokenBalances([])
-				}  
-				//if user has no holding.
-				else if(tokenHoldings.assets.length > 0) setUserTokenBalances(tokenHoldings.assets)
+			else {
+				showInfoMessage("Query for the same address")
 			}
 			
 		} catch (error: any) {
@@ -131,7 +139,7 @@ const Home: NextPage<Props> = ({ name, transactions }) => {
 				<Toggle chainId={chainId ? chainId : 1} />
 				<Header> {account} </Header>
 				<ERC20TokensList tokenList = {userTokenBalances}/>
-				<PendingTxList pendingList = {transactions} />
+				<PendingTxList pendingList = {transactions} userAddress={userAddress} isChanged={false} />
 			</main>
 		</div>
 	);

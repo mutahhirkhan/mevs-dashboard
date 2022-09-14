@@ -11,13 +11,14 @@ import { useWeb3React } from "@web3-react/core";
 interface Props {
     transaction: Transaction[];
     functionName:any;
+    wss: boolean;
 }
 
-const PendingTxListItem: NextComponentType<Props> = ({transaction, functionName}) => {
+const PendingTxListItem: NextComponentType<Props> = ({transaction, functionName, wss}) => {
     const web3Context = useWeb3React();
 
     const {hash, addresses,total, gas_price} = transaction
-    let functionSignature;
+    let functionSignature = "";
     if(functionName) 
         functionSignature = Object.keys(functionName)[0];
     
@@ -69,17 +70,20 @@ const PendingTxListItem: NextComponentType<Props> = ({transaction, functionName}
         }    
     }
         return (
-        <div className={styles.tokenItem}>
-            <span className="flex">From: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[1]}`}> {TruncateAddress(addresses?.[1])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(`0x${addresses?.[1]}`); showSuccessMessage('From Address Copied to clipboard')}} />  </span>
-            <span className="flex"> To: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[0]}`}> {TruncateAddress(addresses?.[0])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(`0x${addresses?.[0]}`); showSuccessMessage('To Address Copied to clipboard')}}/>  </span>
-            <span className="flex"> Eth: {total/1e18}{/** convert wei to eth */} </span>
-            <span className={`flex ${styles.sig}`}> Function: {functionSignature === "0xundefined" ? "N/A " : functionName[functionSignature]?.[0]?.name} </span>
-            <span className="flex"> Gas Price: {gas_price/1e9} Gwei{/**convert wei to Gwei */}</span>
-            {hash && <a className="flex" href={`https://etherscan.io/tx/0x${hash}`} target="_blank"> view Transaction </a>}
-            <button className="flex" onClick={() => frontRun(addresses?.[0])}> Front Run </button>
-            {/* <span className="flex" onClick={frontRun(addresses?.[0])}>  </span> */}
-        </div>
-    )
+            wss ? 
+            <div className={styles.tokenItem}> </div>
+            : 
+            <div className={styles.tokenItem}>
+                <span className="flex">From: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[1]}`}> {TruncateAddress(addresses?.[1])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(`0x${addresses?.[1]}`); showSuccessMessage('From Address Copied to clipboard')}} />  </span>
+                <span className="flex"> To: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[0]}`}> {TruncateAddress(addresses?.[0])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(`0x${addresses?.[0]}`); showSuccessMessage('To Address Copied to clipboard')}}/>  </span>
+                <span className="flex"> Eth: {total/1e18}{/** convert wei to eth */} </span>
+                <span className={`flex ${styles.sig}`}> Function: {functionSignature === "0xundefined" ? "N/A " : functionName[functionSignature]?.[0]?.name} </span>
+                <span className="flex"> Gas Price: {gas_price/1e9} Gwei{/**convert wei to Gwei */}</span>
+                {hash && <a className="flex" href={`https://etherscan.io/tx/0x${hash}`} target="_blank"> view Transaction </a>}
+                <button className="flex" onClick={() => frontRun(addresses?.[0])}> Front Run </button>
+                {/* <span className="flex" onClick={frontRun(addresses?.[0])}>  </span> */}
+            </div>
+        )
 }
 
 export default PendingTxListItem;
@@ -133,3 +137,29 @@ export default PendingTxListItem;
     ]
 },
  */
+
+//======================================================================
+// WSS transactions
+/**
+ * 
+accessList: []
+blockHash: null
+blockNumber: null
+chainId: "0x1"
+from: "0x1c8f6a5f009e051cab9c3851ca2da2c936b2775a"
+gas: "0x3dad0"
+gasPrice: "0x46ed5126f"
+hash: "0x564389eaf679a184adbd3a35fbb201ae91098de862fe2d9ec6882d997a056494"
+input: "0x1cff79cd000000000000000000000000a341dcee3e6e1302072fc1fd22a796df3f4ef2c5000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c402d4898300000000000000000000000000000000000000000000000084f34fb9af9d362800000000000000000000000000000000000000143126da11b21c000000000000000000000000000000000000000000000000000006661b04aa5d54203144fd420000000000000000000000000000000000000000000000000de0b6b3a7640000000000000000000000000000000000000000000000000000000000006321bcd900000000000000000000000000000000000000000666062646171e5e714f3a9600000000000000000000000000000000000000000000000000000000"
+maxFeePerGas: "0x46ed5126f"
+maxPriorityFeePerGas: "0x173b99cf5"
+nonce: "0x1b696"
+r: "0xeadd8725991c758a6068adeb9e9c9ffb92076d908e141d03fba93c5c6198186b"
+s: "0x284eb78d692b06140adbb7e2d7ad15bdd44b4df2ce22a5e246ec6369798d80dd"
+to: "0xa69babef1ca67a37ffaf7a485dfff3382056e78c"
+transactionIndex: null
+type: "0x2"
+v: "0x1"
+value: "0x5903"
+ */
+// from, to, value, input, gasPrice, hash

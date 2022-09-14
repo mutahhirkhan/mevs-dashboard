@@ -1,9 +1,9 @@
-export const fetchResponse = async (url: string, address?: string, wss?:bool): Promise<any> => {
+export const fetchResponse = async (url: string, address?: string, wss?: boolean): Promise<any> => {
 	try {
 		// console.log('user address',address);
 		//this response has to be object returned by service running in the background
 		const response = await fetch(
-			process.env.NEXT_PUBLIC_BASE_URL + url + `${address ? "?user=" + address : ""}`+ `${wss ? "?wss=" + wss : ""}`
+			process.env.NEXT_PUBLIC_BASE_URL + url + `${address ? "?user=" + address : ""}`+ `${wss ? "&wss=" + wss : ""}`
 			// ,{
 			// 	body: JSON.stringify(address)
 			// }

@@ -1,7 +1,9 @@
 const Web3 = require("web3");
 const axios = require("axios");
+import WebSocket, { WebSocketServer } from 'ws';
 
-const { ANKR_API_KEY, ANKR_RPC_ENDPOINT, ANKR_API_ENDPOINT } = process.env;
+
+const { ANKR_API_KEY, ANKR_RPC_ENDPOINT, ANKR_API_ENDPOINT, ANKR_WSS_ENDPOINT } = process.env;
 const url: string = `${ANKR_API_ENDPOINT}`; // url string
 
 const web3 = new Web3(new Web3.providers.HttpProvider(url));
@@ -45,6 +47,25 @@ const ankrGetTokenBalances = async (address: string = "") => {
 const ankrGetPendingTransactions =  () => {
 	try {
 		console.log("calling pending transactions")
+
+		const request = '{"id": 1, "method": "eth_subscribe", "params": ["newPendingTransactions"]}';  
+
+		const ws = new WebSocket(ANKR_WSS_ENDPOINT);
+
+		ws.on('open', function open() {
+			ws.send(request);
+		});
+		ws.on('message', function incoming(data:any) {
+			let res = JSON.parse(data)
+			console.log('RES==',res)
+			// if (res.result != null) {
+			// 	console.log(`Subscription: ${res.result}`);
+			// } else if (res.params != null && res.params["result"] != null) {
+			// 	console.log(`New pending transaction: ${res.params['result']}`);
+			// } else {
+			// 	console.log(`Unexpected: ${data}`);
+			// }
+		});
 	}
 	catch(error) {
 		console.log(error)

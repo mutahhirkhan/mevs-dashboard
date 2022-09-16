@@ -8,19 +8,21 @@ import {getFunctionNameBySignature} from "./../../utils/generalServices.config"
 import { showSuccessMessage, showErrorMessage } from "./../Notification/Notification"
 import { useWeb3React } from "@web3-react/core";
 
+type FunctionSignature = {
+    signature: string;
+    name: string;
+}
 interface Props {
     transaction: Transaction[];
-    functionName:any;
+    functionName:FunctionSignature;
     wss: boolean;
 }
 
 const PendingTxListItem: NextComponentType<Props> = ({transaction, functionName, wss}) => {
-    const web3Context = useWeb3React();
+    // console.log("functionName",functionName)
+    const {account, } = useWeb3React();
 
-    const {hash, addresses,total, gas_price} = transaction
-    let functionSignature = "";
-    if(functionName) 
-        functionSignature = Object.keys(functionName)[0];
+    const {hash, addresses,total, gas_price,/*onwards are of wss*/ from, to, value, input, gasPrice} = transaction
     
     const frontRun = async (contractAddress: string) => {
         try {
@@ -71,13 +73,21 @@ const PendingTxListItem: NextComponentType<Props> = ({transaction, functionName,
     }
         return (
             wss ? 
-            <div className={styles.tokenItem}> </div>
+            <div className={styles.tokenItem}>
+                <span className="flex">From: &nbsp; <a href={`https://etherscan.io/address/${from}` }  target="_blank" > {TruncateAddress(from)} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(`${from}`); showSuccessMessage('From Address Copied to clipboard')}} />  </span>
+                <span className="flex"> To: &nbsp; <a href={`https://etherscan.io/address/${to}` }  target="_blank" > {TruncateAddress(to)} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(`${to}`); showSuccessMessage('To Address Copied to clipboard')}}/>  </span>
+                <span className="flex"> Eth: {(+value)/1e18}{/** convert wei to eth */} </span>
+                <span pan className={`flex ${styles.sig}`}> Function: {functionName?.signature === "0xundefined" ? "N/A " : functionName?.name} </span>
+                <span className="flex"> Gas Price: {gasPrice/1e9} Gwei{/**convert wei to Gwei */}</span>
+                {hash && <a className="flex" href={`https://etherscan.io/tx/${hash}`} target="_blank"> view Transaction </a>}
+                <button className="flex" onClick={() => frontRun(to)}> Front Run </button>
+            </div>
             : 
             <div className={styles.tokenItem}>
                 <span className="flex">From: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[1]}`}> {TruncateAddress(addresses?.[1])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(`0x${addresses?.[1]}`); showSuccessMessage('From Address Copied to clipboard')}} />  </span>
                 <span className="flex"> To: &nbsp; <a href={`https://etherscan.io/address/0x${addresses?.[0]}`}> {TruncateAddress(addresses?.[0])} </a> &nbsp; &nbsp; <CopyOutlined onClick={() => {navigator.clipboard.writeText(`0x${addresses?.[0]}`); showSuccessMessage('To Address Copied to clipboard')}}/>  </span>
                 <span className="flex"> Eth: {total/1e18}{/** convert wei to eth */} </span>
-                <span className={`flex ${styles.sig}`}> Function: {functionSignature === "0xundefined" ? "N/A " : functionName[functionSignature]?.[0]?.name} </span>
+                <span className={`flex ${styles.sig}`}> Function: {functionName?.signature === "0xundefined" ? "N/A " : functionName?.name} </span>
                 <span className="flex"> Gas Price: {gas_price/1e9} Gwei{/**convert wei to Gwei */}</span>
                 {hash && <a className="flex" href={`https://etherscan.io/tx/0x${hash}`} target="_blank"> view Transaction </a>}
                 <button className="flex" onClick={() => frontRun(addresses?.[0])}> Front Run </button>

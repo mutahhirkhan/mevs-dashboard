@@ -1,39 +1,43 @@
-import styles from "./ERC20TokenListItem.module.css"
+import styles from "./ERC20TokenListItem.module.css";
 interface TokenType {
-    balance: number | string;
-    balanceRawInteger: number | string;
-    balanceUsd: number | string;
-    blockchain: string;
-    holderAddress: string
-    thumbnail: string;
-    tokenDecimals: number | string;
-    tokenName: string
-    tokenPrice: number | string;
-    tokenSymbol: string
-    contractAddress?: string;
-    tokenType: string;
+	balance: number | string;
+	balanceRawInteger: number | string;
+	balanceUsd: number | string;
+	blockchain: string;
+	holderAddress: string;
+	thumbnail: string;
+	tokenDecimals: number | string;
+	tokenName: string;
+	tokenPrice: number | string;
+	tokenSymbol: string;
+	contractAddress?: string;
+	tokenType: string;
 }
 
-const ERC20TokenListItem = ({token}:TokenType) => {
-    const {tokenName, thumbnail, tokenDecimals, tokenSymbol, tokenType, balance, contractAddress} = token
-    return   (
-
-        <div className={styles.tokenItem}>
-            <span className="flex">{tokenName}</span>
-            <span  className="flex">
-                <img height="30px" src={thumbnail}/>
-            </span>
-            <span className="flex"> decimals: {tokenDecimals} </span>
-            <span className="flex"> symbol: {tokenSymbol} </span>
-            <span className="flex"> type: {tokenType} </span>
-            <span className="flex">{balance} {tokenSymbol}</span>
-            {/* <span>{tokenSymbol}</span> */}
-            {contractAddress && <a className="flex" href={`https://etherscan.io/address/${contractAddress}`} target="_blank"> view contract</a>}
-            
-            
-        </div>
-    )
-}
+const ERC20TokenListItem = ({ token }: TokenType) => {
+	const { tokenName, thumbnail, tokenDecimals, tokenSymbol, tokenType, balance, contractAddress } = token;
+	return (
+		<div className={styles.tokenItem}>
+			<span className="flex">{tokenName}</span>
+			<span className="flex">
+				<img height="30px" src={thumbnail} />
+			</span>
+			<span className="flex"> {tokenDecimals} </span>
+			<span className="flex"> {tokenSymbol} </span>
+			<span className="flex"> {tokenType} </span>
+			<span className="flex">
+				{balance} {tokenSymbol}
+			</span>
+			{/* <span>{tokenSymbol}</span> */}
+			{contractAddress && (
+				<a className="flex" href={`https://etherscan.io/address/${contractAddress}`} target="_blank">
+					{" "}
+					view contract
+				</a>
+			)}
+		</div>
+	);
+};
 
 export default ERC20TokenListItem;
 

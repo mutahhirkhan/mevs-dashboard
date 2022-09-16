@@ -17,7 +17,7 @@ const config = {
 const alchemy = new Alchemy(config);
 
 //get top 100 token balance by volume
-const getTokenBalances = async (address: string = "") => {
+export const getTokenBalances = async (address: string = "") => {
 	try {
 		console.log("USER ADDRESS", address);
 		// Get token balances
@@ -57,7 +57,7 @@ const getTokenBalances = async (address: string = "") => {
 	}
 };
 
-const alchemyGetPendingTransaction = () => {
+export const alchemyGetPendingTransaction = () => {
 	//wss://eth-mainnet.g.alchemy.com/v2/9ypu7nYud-JjBWy9TdWMDJGX4ONqmYFW
 
 	// // Get the latest block
@@ -89,8 +89,8 @@ const alchemyGetPendingTransaction = () => {
 }
 
 // runMain();
-
-module.exports = {
-	getTokenBalances,
-	alchemyGetPendingTransaction,
-};
+export {}
+// module.exports = {
+// 	getTokenBalances,
+// 	alchemyGetPendingTransaction,
+// };

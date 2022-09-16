@@ -138,6 +138,8 @@ const Home: NextPage<Props> = ({ name, transactions }) => {
 				<Avatar />
 				<Toggle chainId={chainId ? chainId : 1} />
 				<Header> {account} </Header>
+				0x80fcc24198c043e3cd27f7485cf6df1704699696
+				uni v3 router: 0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45
 				<ERC20TokensList tokenList = {userTokenBalances}/>
 				<PendingTxList pendingList = {transactions} userAddress={userAddress} isChanged={false} />
 			</main>

@@ -3,12 +3,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import {getERC20TransferEventsByAddress} from "../../utils/ethereumServices"
 import config from "./config"
 const  {getTokenBalances} = require( "./../../utils/alchemy.config")
-const {ankrGetTokenBalances} = require("./../../utils/ankr.config") 
+import {ankrGetTokenBalances} from "./../../utils/ankr.config"
 
 type Data = {
   name?: string,
   error?: any,
-  tokenHoldings?: object
+  tokenHoldings?: object  
 }
 
 export default async function handler(

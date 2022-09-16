@@ -1,5 +1,4 @@
 import { Button, notification, Space, message } from 'antd';
-import React from 'react';
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
@@ -20,29 +19,28 @@ const openNotificationWithIcon = (type: NotificationType) => {
 //   </Space>
 // );
 
-const showErrorMessage = ( content: string) => {
+export const showErrorMessage = ( content: string) => {
     message.error({
         duration:3,
         content
     });
 };
-const showSuccessMessage = (content: string) => {
+export const showSuccessMessage = (content: string) => {
     message.success({
         duration:3,
         content
     });
 };
-const showInfoMessage = (content: string) => {
+export const showInfoMessage = (content: string) => {
     message.warning({
         duration:3,
         content
     });
 };
 
-
-// export default App;
-module.exports = {
-    showErrorMessage,
-    showSuccessMessage,
-    showInfoMessage
-}
+export {};
+// module.exports = {
+//     showErrorMessage,
+//     showSuccessMessage,
+//     showInfoMessage
+// }

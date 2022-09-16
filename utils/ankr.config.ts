@@ -1,6 +1,6 @@
 const Web3 = require("web3");
 const axios = require("axios");
-import WebSocket, { WebSocketServer } from 'ws';
+import WebSocket from 'ws';
 
 
 const { ANKR_API_KEY, ANKR_RPC_ENDPOINT, ANKR_API_ENDPOINT, ANKR_WSS_ENDPOINT } = process.env;
@@ -19,7 +19,7 @@ let reqBody = {
 };
 const endpoint = `${ANKR_RPC_ENDPOINT}`;
 
-const ankrGetTokenBalances = async (address: string = "") => {
+export const ankrGetTokenBalances = async (address: string = "") => {
 	try {
 		reqBody.params.walletAddress = address;
 		// console.log('calling to',reqBody);
@@ -44,7 +44,7 @@ const ankrGetTokenBalances = async (address: string = "") => {
 	}
 };
 
-const ankrGetPendingTransactions =  () => {
+export const ankrGetPendingTransactions =  () => {
 	try {
 		console.log("calling pending transactions")
 
@@ -73,9 +73,9 @@ const ankrGetPendingTransactions =  () => {
 }
 
 
-module.exports = {
-	ankrGetTokenBalances,
-	ankrGetPendingTransactions
-};
+// module.exports = {
+// 	ankrGetTokenBalances,
+// 	ankrGetPendingTransactions
+// };
 
 export {};

@@ -7,11 +7,15 @@ export const getFunctionNameBySignature = async (sig: string) => {
 		//0x827481ea
 		if (!sig) throw new Error("Signature not provided");
 		//you can try this api is postman as well
-		const res = await axios.get(`https://sig.eth.samczsun.com/api/v1/signatures?function=${sig}`);
-		const data = await res.json();
+		const data = await axios.get(`https://sig.eth.samczsun.com/api/v1/signatures?function=${sig}`);
+		// console.log('==============');
+		// console.log(data);
+		
+		// console.log('==============');
+		// const data = await res.json();
 		//optional chaining is not required here becuase api response is consistent either found or not
 		return {
-			data: data.result.function,
+			data: data.data.result.function,
 		};
 	} catch (error) {
 		return {
